@@ -44,8 +44,8 @@ const createProfile = asyncHandler(async (req, res) => {
     city,
     bio,
     gender,
-    avatar: avatar?.url || "",
-    cover: cover?.url || "",
+    avatar: avatar?.secure_url || "",
+    cover: cover?.secure_url || "",
     owner: req.user?._id,
     fullName: req.user?.fullName,
     email: req.user?.email,
@@ -86,7 +86,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (req.files?.avatar?.[0]?.path) {
     const imageLocalPath = req.files.avatar[0].path;
     avatar = await uploadOnCloudinary(imageLocalPath);
-    if (!avatar.url) {
+    if (!avatar.secure_url) {
       throw new ApiError(400, "Error while uploading image");
     }
 
@@ -100,7 +100,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (req.files?.cover?.[0]?.path) {
     const coverLocalPath = req.files.cover[0].path;
     cover = await uploadOnCloudinary(coverLocalPath);
-    if (!cover.url) {
+    if (!cover.secure_url) {
       throw new ApiError(400, "Error while uploading cover image");
     }
 
@@ -117,8 +117,8 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (dateofBirth?.trim()) updateFields.dateofBirth = dateofBirth;
   if (city?.trim()) updateFields.city = city;
   if (bio?.trim()) updateFields.bio = bio;
-  if (avatar?.url) updateFields.avatar = avatar.url;
-  if (cover?.url) updateFields.cover = cover.url;
+  if (avatar?.secure_url) updateFields.avatar = avatar.secure_url;
+  if (cover?.secure_url) updateFields.cover = cover.secure_url;
 
   const profile = await Profile.findByIdAndUpdate(
     profileId,

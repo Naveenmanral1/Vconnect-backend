@@ -33,7 +33,7 @@ const createPost = asyncHandler(async (req, res) => {
   const post = await Post.create({
     title,
     description,
-    image: image?.url || "",
+    image: image?.secure_url || "",
     owner: req.user?._id,
   });
 
@@ -67,7 +67,7 @@ const updatePost = asyncHandler(async (req, res) => {
     const imageLocalPath = req.file.path;
 
     image = await uploadOnCloudinary(imageLocalPath);
-    if (!image.url) {
+    if (!image.secure_url) {
       throw new ApiError(400, "Error while uploading image");
     }
 
@@ -80,7 +80,7 @@ const updatePost = asyncHandler(async (req, res) => {
   const updateFields = {};
   if (title?.trim()) updateFields.title = title;
   if (description?.trim()) updateFields.description = description;
-  if (image?.url) updateFields.image = image.url;
+  if (image?.secure_url) updateFields.image = image.secure_url;
 
   const updatePost = await Post.findByIdAndUpdate(
     postId,
